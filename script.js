@@ -10,25 +10,73 @@ const playerImage = new Image();
 playerImage.src = 'shadow_dog.png';
 const spriteWidth = 575;
 const spriteHeight = 523;
-let frameX = 0;
-let frameY = 0;
 //to slow down animateion, staggerframe controls the frame speed
 let gameFrame = 0;
-let staggerFrame = 5
+let staggerFrame = 5;
+
+const spriteAnimations = [];
+const animationStates = [
+  {
+    name: 'idle',
+    frames: 7
+  },
+  {
+    name: 'jump',
+    frames: 7
+  },
+  {
+    name: 'fall',
+    frames: 7
+  },
+  {
+    name: 'run',
+    frames: 9
+  },
+  {
+    name: 'dizzy',
+    frames: 11
+  },
+  {
+    name: 'sit',
+    frames: 5
+  },
+  {
+    name: 'roll',
+    frames: 7
+  },
+  {
+    name: 'bite',
+    frames: 7
+  },
+  {
+    name: 'ko',
+    frames: 12
+  },
+  {
+    name: 'getHit',
+    frames: 4
+  },
+]
+animationStates.forEach((state, idx) => {
+  let frames = {
+    loc: [],
+  }
+  for (let j = 0; j < state.frames; j++) {
+    let positionX = j * spriteWidth;
+    let positionY = idx * spriteHeight;
+    frames.loc.push({x: positionX, y: positionY})
+  }
+  spriteAnimations[state.name] = frames
+})
 
 
 function animate() {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  //image: the image we are spriting over
-  //sx/sy: use traversing the source image by column/row
-  //sw/sh: use selecting how much from the photo to crop out
-  //dx/dy: starting point to grab the image from
-  //dw/dh: how much of the image to grab in relation to the dx/dy
-  ctx.drawImage(playerImage, frameX * spriteWidth, frameY * spriteHeight, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
-  if (gameFrame % staggerFrame === 0) {
-    if (frameX < 6) frameX++;
-    else frameX = 0;
-  }
+  let position = Math.floor(gameFrame / staggerFrame) % spriteAnimations['sit'].loc.length; //goes to next sprite only if mod 6
+  let frameX = spriteWidth * position; //cycles betwen 0and the number from above;
+  let frameY = spriteAnimations['sit'].loc[position].y
+  ctx.drawImage(playerImage, frameX, frameY, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
+
   gameFrame++;
   requestAnimationFrame(animate);
 };
