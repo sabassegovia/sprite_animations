@@ -1,3 +1,10 @@
+let playerState = "idle";
+const dropdown = document.getElementById('animations');
+dropdown.addEventListener('change', function (e) {
+  playerState = e.target.value;
+})
+
+
 //gets all canvas 2d drawing methods, stores the in canvas -> ctx variable.
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
@@ -12,7 +19,9 @@ const spriteWidth = 575;
 const spriteHeight = 523;
 //to slow down animateion, staggerframe controls the frame speed
 let gameFrame = 0;
-let staggerFrame = 5;
+let staggerFrame = 6;
+
+
 
 const spriteAnimations = [];
 const animationStates = [
@@ -53,7 +62,7 @@ const animationStates = [
     frames: 12
   },
   {
-    name: 'getHit',
+    name: 'gethit',
     frames: 4
   },
 ]
@@ -72,9 +81,9 @@ animationStates.forEach((state, idx) => {
 
 function animate() {
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  let position = Math.floor(gameFrame / staggerFrame) % spriteAnimations['sit'].loc.length; //goes to next sprite only if mod 6
+  let position = Math.floor(gameFrame / staggerFrame) % spriteAnimations[playerState].loc.length; //goes to next sprite only if mod 6
   let frameX = spriteWidth * position; //cycles betwen 0and the number from above;
-  let frameY = spriteAnimations['sit'].loc[position].y
+  let frameY = spriteAnimations[playerState].loc[position].y
   ctx.drawImage(playerImage, frameX, frameY, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
 
   gameFrame++;
